@@ -53,6 +53,14 @@
 #include <string.h>
 #include <unistd.h>
 
+#ifdef REMOTE_HANDLE_SPD
+extern "C" {
+#include "remote.h"
+} // extern C
+
+#define ITRANSPORT_PREFIX "'\":;./\\"
+#endif
+
 #include "chre/platform/slpi/fastrpc.h"
 #include "chre_host/log.h"
 #include "chre_host/host_protocol_host.h"
@@ -422,6 +430,14 @@ int main() {
   struct reverse_monitor_thread_data reverse_monitor;
   ::android::chre::SocketServer server;
 
+#ifdef REMOTE_HANDLE_SPD
+  remote_handle fd = -1;
+  if(remote_handle_open(ITRANSPORT_PREFIX "createstaticpd:sensorspd", &fd)){
+     LOGE("Failed to to open remote handle sensorspd");
+     return -1;
+  }
+#endif
+
   if (!init_reverse_monitor(&reverse_monitor)) {
     LOGE("Couldn't initialize reverse monitor");
   } else {
@@ -470,7 +486,11 @@ int main() {
       }
     }
   }
-
+#ifdef REMOTE_HANDLE_SPD
+  if(fd != (remote_handle)-1) {
+    remote_handle_close(fd);
+  }
+#endif
   return ret;
 }
 
