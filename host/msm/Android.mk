@@ -30,7 +30,7 @@ LOCAL_VENDOR_MODULE := true
 LOCAL_CPP_EXTENSION := .cc
 LOCAL_CFLAGS += -Wall -Werror -Wextra
 
-FASTRPC_INC := $(TARGET_OUT_INTERMEDIATES)/include/fastrpc/inc
+FASTRPC_INC := system/chre/host/common/include/fastrpc/inc
 LOCAL_ADDITIONAL_DEPENDENCIES ::= $(FASTRPC_INC)
 
 LOCAL_SRC_FILES := \
