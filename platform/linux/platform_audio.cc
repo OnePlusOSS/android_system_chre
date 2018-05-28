@@ -36,6 +36,10 @@ PlatformAudio::PlatformAudio() {}
 
 PlatformAudio::~PlatformAudio() {}
 
+void PlatformAudio::init() {
+  // TODO: Implement this.
+}
+
 void audioSourceCallback(void *cookie) {
   auto *audioSource = static_cast<AudioSource *>(cookie);
 
@@ -71,6 +75,10 @@ void audioSourceCallback(void *cookie) {
   } else {
     FATAL_ERROR("Unimplemented data format");
   }
+}
+
+void PlatformAudio::setHandleEnabled(uint32_t handle, bool enabled) {
+  // TODO: Implement this.
 }
 
 bool PlatformAudio::requestAudioDataEvent(uint32_t handle,

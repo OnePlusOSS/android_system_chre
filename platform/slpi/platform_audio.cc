@@ -81,13 +81,35 @@ void handleWcdSpiAudioAvailability(uint32_t handle, bool available) {
 
 }  // anonymous namespace
 
-PlatformAudio::PlatformAudio() {
+PlatformAudio::PlatformAudio() {}
+
+PlatformAudio::~PlatformAudio() {
+  wcd_spi_client_deinit();
+}
+
+void PlatformAudio::init() {
   wcd_spi_client_init(handleWcdSpiAudioDataEvent,
                       handleWcdSpiAudioAvailability);
 }
 
-PlatformAudio::~PlatformAudio() {
-  wcd_spi_client_deinit();
+void PlatformAudio::setHandleEnabled(uint32_t handle, bool enabled) {
+  uint32_t lastNumAudioClients = mNumAudioClients;
+
+  if (enabled) {
+    mNumAudioClients++;
+  } else if (mNumAudioClients > 0) {
+    mNumAudioClients--;
+  } else {
+    LOGE("Invalid request to change handle enabled state");
+  }
+
+  if (lastNumAudioClients == 0 && mNumAudioClients > 0) {
+    LOGD("Enabling WCD SLPI");
+    // TODO: Notify the host that audio is enabled.
+  } else if (lastNumAudioClients > 0 && mNumAudioClients == 0) {
+    LOGD("Disabling WCD SLPI");
+    // TODO: Notify the host that audio is disabled.
+  }
 }
 
 bool PlatformAudio::requestAudioDataEvent(uint32_t handle,
