@@ -16,7 +16,7 @@
 
 
 ifeq ($(call is-vendor-board-platform,QCOM),true)
-ifeq ($(call is-board-platform-in-list,sdm845), true)
+ifeq ($(call is-board-platform-in-list,sdm845 sdm710), true)
 
 LOCAL_PATH := $(call my-dir)
 
@@ -51,7 +51,13 @@ LOCAL_SHARED_LIBRARIES := \
     libutils \
     libcutils \
     liblog \
-    libsdsprpc \
+
+ifeq ($(call is-board-platform-in-list, sdm710), true)
+LOCAL_CFLAGS += -DREMOTE_HANDLE_SPD
+LOCAL_SHARED_LIBRARIES += libadsprpc
+else
+LOCAL_SHARED_LIBRARIES += libsdsprpc
+endif
 
 include $(BUILD_EXECUTABLE)
 
